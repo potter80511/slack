@@ -28,12 +28,19 @@ firebase.analytics();
 
 window.firebase = firebase;
 
+const unsubscribed = firebase.auth().onAuthStateChanged(user => {
+  // dispatch user
+  store.dispatch('setUser', user);
+
+  new Vue({
+    router,
+    store,
+    render: h => h(App)
+  }).$mount('#app')
+
+  // recursion - this function calls itself on auth change
+  unsubscribed();
+});
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
-
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
