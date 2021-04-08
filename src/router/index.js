@@ -13,7 +13,7 @@ const routes = [
     name: 'chat',
     component: Chat,
     beforeEnter: (_to, _from, next) => {
-      !firebase.auth().currentUser ? next('/login') : next('/');
+      !firebase.auth().currentUser ? next('/login') : next()
     },
   },
   {
