@@ -37,6 +37,7 @@
 
 <script>
 import firebase from 'firebase/app';
+import 'firebase/database';
 
 export default {
   name: 'login',
@@ -44,6 +45,7 @@ export default {
     return {
       errors: [],
       loading: false,
+      usersRef: firebase.database().ref('users'),
     }
   },
   computed: {
@@ -58,6 +60,8 @@ export default {
 
       firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then((res) => {
+          this.saveUserToUsersRef(res.user);
+
           this.$store.dispatch('setUser', res.user);
           this.$router.push('/');
           // console.log(res.user)
@@ -65,7 +69,14 @@ export default {
           this.errors.push(error.message);
           this.loading = false;
         });
-    }
+    },
+    // save user to database
+    saveUserToUsersRef(user) {
+      return this.usersRef.child(user.uid).set({
+        name: user.displayName,
+        avatar: user.photoURL,
+      });
+    },
   }
 }
 </script>
