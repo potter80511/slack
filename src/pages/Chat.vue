@@ -11,7 +11,7 @@
 
 <script>
 import firebase from 'firebase/app';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/sidebar/Sidebar';
 
 export default {
   name: 'chat',
