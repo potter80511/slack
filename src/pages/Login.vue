@@ -60,9 +60,9 @@ export default {
 
       firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then((res) => {
-          this.saveUserToUsersRef(res.user);
+          this.saveUserToUsersRef(res.user); // save to firevase
 
-          this.$store.dispatch('setUser', res.user);
+          this.$store.dispatch('setUser', res.user); // save to vuex
           this.$router.push('/');
           // console.log(res.user)
         }).catch(error => {

@@ -81,10 +81,12 @@ export default {
       errors: [],
       channelsRef: firebase.database().ref('channels'),
       channels: [],
+      currentChannel: null,
     }
   },
   mounted () {
-    this.addListeners();
+    this.loadChannels();
+    // this.addListeners();
   },
   computed: {
     hasErrors() {
@@ -92,6 +94,12 @@ export default {
     },
   },
   methods: {
+    loadChannels () {
+      this.channelsRef.on('value', snapshot => {
+        const value = snapshot.val();
+        this.channels = value ? value : [];
+      });
+    },
     cancelAddChannel () {
       this.newChannel = '';
       this.errors = [];
@@ -99,21 +107,32 @@ export default {
     },
 
     addChannel () {
-      const key = this.channelsRef.push().key;
-      const newChannel = { id: key, name: this.newChannel };
+      const { channels } = this;
 
-      this.channelsRef.child(key).update(newChannel)
+      const nextKey = channels.length;
+      const id = this.channelsRef.push().key;
+
+      const newChannel = { id, name: this.newChannel };
+
+      this.channelsRef.child(nextKey).update(newChannel)
         .then(() => {
           this.cancelAddChannel();
         }).catch((error) => {
           this.errors.push(error.message);
         });
     },
-    addListeners () {
-      this.channelsRef.on('child_added', snapshot => {
-        this.channels.push(snapshot.val());
-      });
-    },
+    // addListeners () {
+    //   this.channelsRef.on('child_added', snapshot => {
+    //     this.channels.push(snapshot.val());
+
+    //     // set current channel
+    //     if (this.channels.length > 0) {
+    //       this.currentChannel = this.channels[0];
+    //       this.$store.dispatch('setCurrentChannel', this.currentChannel);
+    //     }
+    //   });
+
+    // },
     detachListeners() {
       this.channelsRef.off();
     },
