@@ -8,8 +8,10 @@
       <button
         type="button"
         class="list-group-item list-group-item-action"
+        :class="{ active: activeChannel(channel) }"
         v-for="channel in channels"
         :key="channel.id"
+        @click="changeChannel(channel)"
       >
         {{ channel.name }}
       </button>
@@ -72,6 +74,7 @@
 
 <script>
 import firebase from 'firebase/app';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'channels',
@@ -81,7 +84,6 @@ export default {
       errors: [],
       channelsRef: firebase.database().ref('channels'),
       channels: [],
-      currentChannel: null,
     }
   },
   mounted () {
@@ -92,12 +94,18 @@ export default {
     hasErrors() {
       return this.errors.length > 0
     },
+    ...mapGetters(['currentChannel']),
   },
   methods: {
     loadChannels () {
       this.channelsRef.on('value', snapshot => {
         const value = snapshot.val();
         this.channels = value ? value : [];
+
+        if (this.channels.length > 0) {
+          const channel = this.channels[0];
+          this.$store.dispatch('setCurrentChannel', channel);
+        }
       });
     },
     cancelAddChannel () {
@@ -120,6 +128,12 @@ export default {
         }).catch((error) => {
           this.errors.push(error.message);
         });
+    },
+    activeChannel (channel) {
+      return channel.id === this.currentChannel.id;
+    },
+    changeChannel (channel) {
+      this.$store.dispatch('setCurrentChannel', channel);
     },
     // addListeners () {
     //   this.channelsRef.on('child_added', snapshot => {
