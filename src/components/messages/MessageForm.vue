@@ -1,0 +1,48 @@
+<template>
+  <div>
+    <div class="messageForm">
+      <form>
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control mt-3"
+            name="message"
+            id="message"
+            placeholder="Write someting..."
+          />
+
+          <div class="input-group-append">
+            <button class="btn btn-primary mt-3" type="button">Send</button>
+          </div>
+          <div class="input-group-append">
+            <button class="btn btn-warning mt-3" type="button">Upload</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'message-form',
+}
+</script>
+
+<style lang="scss" scoped>
+  .messageForm {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 66.7%;
+    z-index: 100;
+    color: white;
+    text-align: center;
+    margin-bottom: -16px;
+    margin-left: 33.3%;
+    input, button {
+      height: 50px;
+    }
+  }
+</style>
