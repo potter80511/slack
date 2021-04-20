@@ -5,7 +5,9 @@
 
     <!-- show channel list -->
     <div class="mt-4">
+      <div v-if="loading" class="loading">loading...</div>
       <button
+        v-else
         type="button"
         class="list-group-item list-group-item-action"
         :class="{ active: activeChannel(channel) }"
@@ -80,6 +82,7 @@ export default {
   name: 'channels',
   data () {
     return {
+      loading: true,
       newChannel: '',
       errors: [],
       channelsRef: firebase.database().ref('channels'),
@@ -101,6 +104,7 @@ export default {
       this.channelsRef.on('value', snapshot => {
         const value = snapshot.val();
         this.channels = value ? value : [];
+        this.loading = false;
 
         if (this.channels.length > 0) {
           const channel = this.channels[0];
