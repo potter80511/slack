@@ -6,13 +6,18 @@
           <input
             type="text"
             class="form-control mt-3"
+            v-model.trim="message"
             name="message"
             id="message"
             placeholder="Write someting..."
           />
 
           <div class="input-group-append">
-            <button class="btn btn-primary mt-3" type="button">Send</button>
+            <button
+              class="btn btn-primary mt-3"
+              type="button"
+              @click="sendMessage"
+            >Send</button>
           </div>
           <div class="input-group-append">
             <button class="btn btn-warning mt-3" type="button">Upload</button>
@@ -24,9 +29,57 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'message-form',
+  data () {
+    return {
+      message: '',
+      errors: [],
+    };
+  },
+  computed: {
+    ...mapGetters(['currentChannel', 'currentUser']),
+  },
+  methods: {
+    sendMessage () {
+      const {
+        currentUser: {
+          displayName,
+          photoURL,
+          uid,
+        },
+        currentChannel,
+        message,
+      } = this;
+
+      const newMessage = {
+        content: message,
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        user: {
+          name: displayName,
+          avatar: photoURL,
+          id: uid,
+        },
+      };
+
+      if (currentChannel !== null) {
+        if (message) {
+          this.$parent.messagesRef.child(currentChannel.id).push().set(newMessage)
+           .then(() => {
+
+           }).catch(error => {
+             this.errors.push(error.message);
+           });
+
+           // reset message
+           this.message = '';
+        }
+      }
+    }
+  },
 }
 </script>
 
