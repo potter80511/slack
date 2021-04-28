@@ -1,6 +1,14 @@
 <template>
-  <div>
-    single message
+  <div class="mt-3 messages" ref="msgContainer">
+    <div class="media" v-for="message in messages" :key="message.id">
+      <img :src="message.user.avatar" height="50" class="align-self-start mr-3">
+      <div class="media-body">
+        <h6 class="mt-0">
+          <a href="#">{{ message.user.name }}</a> - {{ message.timestamp }}
+        </h6>
+        <p>{{ message.content }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -8,5 +16,25 @@
 
 export default {
   name: 'single-message',
+  props: {
+    messages: Array,
+  },
+  // watch: {
+  //   messages(val) {
+  //     console.log('add')
+  //     console.log(val)
+  //     this.$nextTick(function() {
+  //       const container = this.$refs.msgContainer;
+  //       container.scrollTop = container.scrollHeight;
+  //     });
+  //   }
+  // },
 }
 </script>
+
+<style lang="scss" scoped>
+.messages {
+  overflow: scroll;
+  padding-bottom: 50px;
+}
+</style>
