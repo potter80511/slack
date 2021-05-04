@@ -1,6 +1,9 @@
 <template>
-  <div class="mt-3 messages" ref="msgContainer" id="msgContainer" @scroll="checkScroll">
-    <div @click="scrollToBottom">scroll</div>
+  <div
+    id="msgContainer"
+    class="mt-3 messages"
+    ref="msgContainer"
+  >
     <div
       class="media mb-3"
       v-for="message in messages"
@@ -42,38 +45,33 @@ export default {
       return user.id === this.currentUser.uid;
     },
     scrollToBottom() {
-      console.log('click')
-      // const container = this.$refs.msgContainer;
-      // container.scrollTop = 300;
-      // container.scrollTop = container.scrollHeight - 50;
-    },
-    checkScroll() {
-      console.log('checkScroll');
-      // const container = this.$refs.msgContainer;
-      // console.log(container.scrollBottom, 'scrollToBottom');
+      this.$nextTick(() => {
+        const container = this.$refs.msgContainer;
+        container.scrollTop = container.scrollHeight - 80;
+      })
     },
   },
-  // watch: {
-  //   messages(val) {
-  //     // console.log('add')
-  //     // console.log(val)
-  //     this.scrollToBottom();
-  //     this.$nextTick(function() {
-  //       console.log(val, 'message')
-  //       // const container = this.$refs.msgContainer;
-  //       // console.log(container.scrollHeight, 'container')
-  //       // container.scrollTop = container.scrollHeight - 50;
-  //     });
-  //   }
-  // },
+  watch: {
+    messages(val) {
+      if (val) {
+        this.scrollToBottom();
+      }
+    }
+  },
 }
 </script>
+<style lang="scss">
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+</style>
 
 <style lang="scss" scoped>
 #msgContainer {
-  // height: 300px;
+  height: 100vh;
   overflow-y: scroll;
-  padding-bottom: 50px;
+  padding-bottom: 80px;
   img {
     border-radius: 5px;
   }
