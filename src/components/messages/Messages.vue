@@ -40,7 +40,7 @@ export default {
   methods: {
     loadMessages () {
       this.messagesRef.child(this.currentChannel.id).on('child_added', snapshot => {
-        console.log('load')
+        // console.log('load')
         const value = snapshot.val();
         this.messages.push(value);
         // this.loading = false;

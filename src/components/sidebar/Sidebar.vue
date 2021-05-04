@@ -14,11 +14,16 @@
     <hr style="border: 1px solid #333;">
 
     <Channels/>
+
+    <hr style="border: 1px solid #333;">
+
+    <Users/>
   </div>
 </template>
 
 <script>
 import Channels from '@/components/sidebar/Channels';
+import Users from '@/components/sidebar/Users';
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
 
@@ -26,15 +31,22 @@ export default {
   name: 'sidebar',
   components: {
     Channels,
+    Users,
+  },
+  data() {
+    return {
+      presenceRef: firebase.database().ref('presence'),
+    };
   },
   computed: {
     ...mapGetters(['currentUser'])
   },
   methods: {
     logout() {
-       firebase.auth().signOut();
-       this.$store.dispatch('setUser', null);
-       this.$router.push('/login');
+      this.presenceRef.child(this.currentUser.uid).remove();
+      firebase.auth().signOut();
+      this.$store.dispatch('setUser', null);
+      this.$router.push('/login');
     },
   },
 }

@@ -1,5 +1,6 @@
 <template>
-  <div class="mt-3 messages" ref="msgContainer">
+  <div class="mt-3 messages" ref="msgContainer" id="msgContainer" @scroll="checkScroll">
+    <div @click="scrollToBottom">scroll</div>
     <div
       class="media mb-3"
       v-for="message in messages"
@@ -33,18 +34,35 @@ export default {
       return moment(value).fromNow();
     }
   },
+  mounted() {
+    this.scrollToBottom();
+  },
   methods: {
     selfMessage (user) {
       return user.id === this.currentUser.uid;
     },
+    scrollToBottom() {
+      console.log('click')
+      // const container = this.$refs.msgContainer;
+      // container.scrollTop = 300;
+      // container.scrollTop = container.scrollHeight - 50;
+    },
+    checkScroll() {
+      console.log('checkScroll');
+      // const container = this.$refs.msgContainer;
+      // console.log(container.scrollBottom, 'scrollToBottom');
+    },
   },
   // watch: {
   //   messages(val) {
-  //     console.log('add')
-  //     console.log(val)
+  //     // console.log('add')
+  //     // console.log(val)
+  //     this.scrollToBottom();
   //     this.$nextTick(function() {
-  //       const container = this.$refs.msgContainer;
-  //       container.scrollTop = container.scrollHeight;
+  //       console.log(val, 'message')
+  //       // const container = this.$refs.msgContainer;
+  //       // console.log(container.scrollHeight, 'container')
+  //       // container.scrollTop = container.scrollHeight - 50;
   //     });
   //   }
   // },
@@ -52,8 +70,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.messages {
-  overflow: scroll;
+#msgContainer {
+  // height: 300px;
+  overflow-y: scroll;
   padding-bottom: 50px;
   img {
     border-radius: 5px;
