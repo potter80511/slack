@@ -3,7 +3,12 @@
     <div class="users text-light">
       <h4>Users</h4>
       <ul class="nav flex-column">
-        <li v-for="user in users" :key="user.uid" class="mb-3">
+        <li
+          v-for="user in users"
+          :key="user.uid"
+          class="each-user mb-3"
+          @click.prevent="changeChannel(user)"
+        >
           <span>
             <span class="avatar mr-2">
               <span
@@ -13,7 +18,10 @@
               />
               <img alt="" class="img rounded-circle" :src="user.avatar" height="30" />
             </span>
-            <span class="text-light">{{ user.name }}</span>
+            <span
+              class="user-name"
+              :class="isActive(user) ? 'text-light' : 'text-muted'"
+            >{{ user.name }}</span>
             <span v-if="isCurrentUser(user)" class="text-secondary ml-2">you</span>
           </span>
         </li>
@@ -40,7 +48,7 @@ export default {
     this.loadUsers();
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters(['currentUser', 'currentChannel']),
   },
   methods: {
     loadUsers () {
@@ -85,11 +93,33 @@ export default {
       return user.uid === this.currentUser.uid;
     },
 
+    isActive(user) {
+      const channelId = this.getChannelId(user.uid);
+      return this.currentChannel.id === channelId;
+    },
+
     addStatusToUser(userId, connected = true) {
       const index = this.users.findIndex(user => user.uid === userId);
       if (index !== -1) {
         this.users[index].status = connected === true ? 'online' : 'offline';
       }
+    },
+
+    changeChannel(user) {
+      // to change channel, we need channel id
+      const channelId = this.getChannelId(user.uid);
+
+      // to get channel id, user getChannelId below
+      const channel = { id: channelId, name: user.name };
+
+      this.$store.dispatch('setPrivate', true);
+      this.$store.dispatch('setCurrentChannel', channel);
+    },
+
+    getChannelId(userId) {
+      return userId < this.currentUser.uid
+        ? userId + '/' + this.currentUser.uid
+        : this.currentUser.uid + '/' + userId;
     },
 
     detachListeners() {
@@ -107,16 +137,24 @@ export default {
 
 <style lang="scss" scoped>
 .users {
-  .avatar {
-    display: inline-block;
-    position: relative;
-    .online-light {
-      position: absolute;
-      bottom: -2px;
-      right: -5px;
-      width: 15px;
-      height: 15px;
-      border: 3px solid black;
+  .each-user {
+    cursor: pointer;
+    .avatar {
+      display: inline-block;
+      position: relative;
+      .online-light {
+        position: absolute;
+        bottom: -2px;
+        right: -5px;
+        width: 15px;
+        height: 15px;
+        border: 3px solid black;
+      }
+    }
+    .user-name {
+      // &.active {
+      //   color: white;
+      // }
     }
   }
 }
