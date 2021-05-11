@@ -1,7 +1,7 @@
 <template>
   <div
     id="msgContainer"
-    class="mt-3 messages"
+    class="messages"
     ref="msgContainer"
   >
     <div
@@ -71,7 +71,7 @@ body {
 #msgContainer {
   height: 100vh;
   overflow-y: scroll;
-  padding-bottom: 80px;
+  padding-bottom: 90px;
   img {
     border-radius: 5px;
   }
