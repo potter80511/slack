@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Channels from '@/components/sidebar/Channels';
+import Channels from '@/components/sidebar/channels/Channels';
 import Users from '@/components/sidebar/Users';
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
