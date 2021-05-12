@@ -6,17 +6,19 @@
     <!-- show channel list -->
     <div class="mt-4">
       <div v-if="loading" class="loading">loading...</div>
-      <button
+      <ul
         v-else
-        type="button"
-        class="list-group-item list-group-item-action"
-        :class="{ active: activeChannel(channel) }"
-        v-for="channel in channels"
-        :key="channel.id"
-        @click="changeChannel(channel)"
+        class="channels-block nav flex-column"
       >
-        {{ channel.name }}
-      </button>
+        <Channel
+          v-for="(channel, index) in channels"
+          :key="channel.id"
+          :isLastChild="index + 1 === channels.length"
+          :changeChannel="() => changeChannel(channel)"
+          :name="channel.name"
+          :active="activeChannel(channel)"
+        />
+      </ul>
     </div>
 
     <!-- Modal -->
@@ -75,11 +77,15 @@
 </template>
 
 <script>
+import Channel from '@/components/sidebar/channels/Channel';
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'channels',
+  components: {
+    Channel,
+  },
   data () {
     return {
       loading: true,
