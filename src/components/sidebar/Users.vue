@@ -3,28 +3,18 @@
     <div class="users text-light">
       <h4>Users</h4>
       <ul class="nav flex-column">
-        <li
-          v-for="user in users"
+        <Channel
+          v-for="(user, index) in users"
           :key="user.uid"
-          class="each-user mb-3"
-          @click.prevent="changeChannel(user)"
-        >
-          <span>
-            <span class="avatar mr-2">
-              <span
-                v-if="!isCurrentUser(user)"
-                class="online-light rounded-circle"
-                :class="isOnline(user) ? 'bg-success' : 'bg-secondary'"
-              />
-              <img alt="" class="img rounded-circle" :src="user.avatar" height="30" />
-            </span>
-            <span
-              class="user-name"
-              :class="isActive(user) ? 'text-light' : 'text-muted'"
-            >{{ user.name }}</span>
-            <span v-if="isCurrentUser(user)" class="text-secondary ml-2">you</span>
-          </span>
-        </li>
+          :isUser="true"
+          :isCurrentUser="isCurrentUser(user)"
+          :isLastChild="index + 1 === users.length"
+          :isOnline="isOnline(user)"
+          :avatar="user.avatar"
+          :name="user.name"
+          :active="isActive(user)"
+          :changeChannel="() => changeChannel(user)"
+        />
       </ul>
     </div>
   </div>
@@ -33,9 +23,13 @@
 <script>
 import firebase from 'firebase/app';
 import { mapGetters } from 'vuex';
+import Channel from '@/components/sidebar/channels/Channel';
 
 export default {
   name: 'users',
+  components: {
+    Channel,
+  },
   data() {
     return {
       users: [],
@@ -134,28 +128,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.users {
-  .each-user {
-    cursor: pointer;
-    .avatar {
-      display: inline-block;
-      position: relative;
-      .online-light {
-        position: absolute;
-        bottom: -2px;
-        right: -5px;
-        width: 15px;
-        height: 15px;
-        border: 3px solid black;
-      }
-    }
-    .user-name {
-      // &.active {
-      //   color: white;
-      // }
-    }
-  }
-}
-</style>

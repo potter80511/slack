@@ -7,7 +7,7 @@
     <span>
       <span class="avatar mr-2">
         <span
-          v-if="isUser && !isCurrent"
+          v-if="isUser && !isCurrentUser"
           class="online-light rounded-circle"
           :class="isOnline ? 'bg-success' : 'bg-secondary'"
         />
@@ -60,6 +60,18 @@ export default {
 <style lang="scss" scoped>
 .each-channel {
   cursor: pointer;
+  .avatar {
+    display: inline-block;
+    position: relative;
+    .online-light {
+      position: absolute;
+      bottom: -2px;
+      right: -5px;
+      width: 15px;
+      height: 15px;
+      border: 3px solid black;
+    }
+  }
 }
 </style>
 
